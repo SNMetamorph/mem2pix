@@ -3,6 +3,7 @@
 */
 #pragma once
 #include <stdint.h>
+#include <stddef.h>
 
 class IMemoryReader
 {

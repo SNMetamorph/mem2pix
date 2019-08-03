@@ -1,10 +1,6 @@
 #include "mem_reader.h"
 #include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ptrace.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include <string.h>
 
 CMemoryReaderLinux::~CMemoryReaderLinux()
 {
@@ -13,26 +9,23 @@ CMemoryReaderLinux::~CMemoryReaderLinux()
 
 bool CMemoryReaderLinux::OpenRemoteProcess(int32_t processID)
 {
-    char filePath[64];
-    snprintf(filePath, sizeof(filePath), "/proc/%d/mem", processID);
-    m_hFile = open(filePath, O_RDONLY);
     m_iProcessID = processID;
-
-    if (m_hFile > 0)
-        return true;
-    else 
-        return false;
+    return true;
 }
 
 bool CMemoryReaderLinux::ReadRemoteMemory(uint8_t *address, size_t byteCount, uint8_t *buffer)
 {
     size_t bytesRead = 0;
-    ptrace(PTRACE_ATTACH, m_iProcessID, 0, 0);
-    waitpid(m_iProcessID, NULL, 0);
-    bytesRead = pread(
-        m_hFile, buffer, byteCount, reinterpret_cast<off_t>(address)
+    off_t memoryOffset = reinterpret_cast<off_t>(address);
+
+    m_iovLocal.iov_base     = buffer;
+    m_iovLocal.iov_len      = byteCount;
+    m_iovRemote.iov_base    = address;
+    m_iovRemote.iov_len     = byteCount;
+
+    bytesRead = process_vm_readv(
+        m_iProcessID, &m_iovLocal, 1, &m_iovRemote, 1, 0
     );
-    ptrace(PTRACE_DETACH, m_iProcessID, 0, 0);
 
     if (bytesRead == byteCount)
         return true;
@@ -42,5 +35,4 @@ bool CMemoryReaderLinux::ReadRemoteMemory(uint8_t *address, size_t byteCount, ui
 
 void CMemoryReaderLinux::CloseRemoteProcess()
 {
-    close(m_hFile);
 }

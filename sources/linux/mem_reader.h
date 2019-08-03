@@ -1,10 +1,11 @@
 #pragma once
 #include "mem_reader_iface.h"
+#include <sys/uio.h>
 
 class CMemoryReaderLinux : public IMemoryReader
 {
 public:
-    CMemoryReaderLinux() : m_hFile(NULL) {};
+    CMemoryReaderLinux() {};
     ~CMemoryReaderLinux();
 
     bool OpenRemoteProcess(int32_t processID) override;
@@ -14,6 +15,7 @@ public:
     void CloseRemoteProcess() override;
 
 private:
-    int m_hFile;
     int m_iProcessID;
+    iovec m_iovLocal;
+    iovec m_iovRemote;
 };

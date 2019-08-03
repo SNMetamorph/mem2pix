@@ -1,6 +1,6 @@
-#pragma once
 #include "renderer.h"
 #include <stdint.h>
+#include <string.h>
 
 CRenderer& CRenderer::Instance()
 {

@@ -5,6 +5,7 @@
 #include "params.h"
 #include "pixel_format.h"
 #include <stdint.h>
+#include <stddef.h>
 
 class CParamsManager
 {

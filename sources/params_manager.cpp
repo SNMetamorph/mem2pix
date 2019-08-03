@@ -1,6 +1,9 @@
 #include "params_manager.h"
+#include "exception.h"
 #include "utils.h"
 #include <string>
+#include <string.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -73,7 +76,7 @@ void CParamsManager::FillFormatList()
 
 void CParamsManager::ParseParameters(int argc, char *argv[])
 {
-    for (int i = 0; i < argc; ++i)
+    for (int i = 1; i < argc; ++i)
     {
         string parameter = argv[i];
         if (i < argc - 1)
@@ -88,18 +91,22 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
                 {
                     processID = stoi(argument, nullptr, 0);
                     if (!IsValidProcessID(processID))
-                        throw exception("invalid process ID");
+                        EXCEPT("invalid process ID");
                 }
                 else
                 {
+#ifdef WIN32
                     processID = FindProcessID(argument, processCount);
                     if (processCount > 1)
                     {
-                        throw exception(
+                        EXCEPT(
                             "found several processes with same name, "
                             "specify process ID instead name"
                         );
                     }
+#else
+                    EXCEPT("on Linux you should specify process ID instead name");
+#endif
                 }
 
                 SetProcessID(processID);

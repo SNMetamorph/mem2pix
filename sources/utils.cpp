@@ -7,6 +7,8 @@
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
+#else
+#include <unistd.h>
 #endif
 
 using namespace std;
@@ -54,8 +56,7 @@ int32_t FindProcessID(std::string& processName, size_t &processCount)
     CloseHandle(processSnapshot);
     return processID;
 #else
-    // TODO: implement for Linux
-#error FindProcessID() not yet implemented for Linux
+    return -1;
 #endif
 }
 
@@ -89,8 +90,7 @@ bool IsValidProcessID(int32_t processID)
     CloseHandle(processSnapshot);
     return false;
 #else
-    // TODO: implement for Linux
-#error IsValidProcessID() not yet implemented for Linux
+    return getpgid(processID) >= 0;
 #endif
 }
 

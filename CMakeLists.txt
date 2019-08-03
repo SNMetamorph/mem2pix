@@ -28,7 +28,7 @@ file (GLOB FILE_HEADERS ${DIR_SOURCES}/*.h)
 if (MSVC)
 	file (GLOB FILE_SOURCES_PLATFORM ${DIR_SOURCES}/windows/*.cpp)
 	file (GLOB FILE_HEADERS_PLATFORM ${DIR_SOURCES}/windows/*.h)
-elseif ()
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	file (GLOB FILE_SOURCES_PLATFORM ${DIR_SOURCES}/linux/*.cpp)
 	file (GLOB FILE_HEADERS_PLATFORM ${DIR_SOURCES}/linux/*.h)
 endif ()
@@ -41,7 +41,7 @@ if (MSVC)
 	target_include_directories (${PROJECT_NAME} PRIVATE
 		${DIR_SOURCES}/windows
 	)
-elseif ()
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_include_directories (${PROJECT_NAME} PRIVATE
 		${DIR_SOURCES}/linux
 	)

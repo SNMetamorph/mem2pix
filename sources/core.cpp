@@ -63,13 +63,18 @@ void ProgramInit()
     if (!renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless))
         throw exception("renderer initializing failed");
 
-    Log("Starting monitoring loop");
+    Log(
+        "Starting monitoring loop\n"
+        "\n"
+        "Usage tips:\n"
+        "  Hold LMB to drag window\n"
+        "  Press RMB to close window\n"
+    );
     while (ProgramLoop());
 }
 
 void ProgramParseParams(int argc, char *argv[], app_params_t &params)
 {
-    Log("Parsing parameters");
     paramsManager()->ParseParameters(argc, argv);
 
     params.processID        = paramsManager()->GetProcessID();

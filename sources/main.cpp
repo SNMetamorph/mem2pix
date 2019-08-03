@@ -11,7 +11,6 @@ static void ReportParams(const app_params_t &params)
     );
 
     printf(
-        "\n"
         "Parameters:\n"
         "  Process ID     : %d\n"
         "  Data offset    : 0x%X\n"

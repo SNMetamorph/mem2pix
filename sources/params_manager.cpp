@@ -81,12 +81,26 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             if (parameter.compare("-p") == 0)
             {
                 int32_t processID;
+                size_t processCount;
                 string argument = argv[++i];
-
+                
                 if (IsDigitString(argument))
+                {
                     processID = stoi(argument, nullptr, 0);
+                    if (!IsValidProcessID(processID))
+                        throw exception("invalid process ID");
+                }
                 else
-                    processID = FindProcessID(argument);
+                {
+                    processID = FindProcessID(argument, processCount);
+                    if (processCount > 1)
+                    {
+                        throw exception(
+                            "found several processes with same name, "
+                            "specify process ID instead name"
+                        );
+                    }
+                }
 
                 SetProcessID(processID);
             }

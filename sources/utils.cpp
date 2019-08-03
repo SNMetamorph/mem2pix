@@ -21,12 +21,15 @@ bool IsDigitString(std::string& str)
     return true;
 }
 
-int32_t FindProcessID(std::string& processName)
+int32_t FindProcessID(std::string& processName, size_t &processCount)
 {
 #ifdef WIN32
+    int32_t processID;
     HANDLE processSnapshot;
     PROCESSENTRY32 processEntry;
 
+    processID = -1;
+    processCount = 0;
     processEntry.dwSize = sizeof(processEntry);
     processSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
     if (processSnapshot == INVALID_HANDLE_VALUE)
@@ -42,16 +45,52 @@ int32_t FindProcessID(std::string& processName)
     {
         if (processName.compare(processEntry.szExeFile) == 0)
         {
-            CloseHandle(processSnapshot);
-            return processEntry.th32ProcessID;
+            processID = processEntry.th32ProcessID;
+            ++processCount;
         }
     } 
     while (Process32Next(processSnapshot, &processEntry));
 
     CloseHandle(processSnapshot);
-    return -1;
+    return processID;
 #else
+    // TODO: implement for Linux
 #error FindProcessID() not yet implemented for Linux
+#endif
+}
+
+bool IsValidProcessID(int32_t processID)
+{
+#ifdef WIN32
+    HANDLE processSnapshot;
+    PROCESSENTRY32 processEntry;
+
+    processEntry.dwSize = sizeof(processEntry);
+    processSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+    if (processSnapshot == INVALID_HANDLE_VALUE)
+        return false;
+
+    if (!Process32First(processSnapshot, &processEntry)) 
+    {
+        CloseHandle(processSnapshot);
+        return false;
+    }
+
+    do 
+    {
+        if (processEntry.th32ProcessID == processID)
+        {
+            CloseHandle(processSnapshot);
+            return true;
+        }
+    } 
+    while (Process32Next(processSnapshot, &processEntry));
+
+    CloseHandle(processSnapshot);
+    return false;
+#else
+    // TODO: implement for Linux
+#error IsValidProcessID() not yet implemented for Linux
 #endif
 }
 

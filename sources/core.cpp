@@ -1,6 +1,7 @@
 #include "core.h"
 #include "utils.h"
 #include "renderer.h"
+#include "exception.h"
 #include "mem_reader.h"
 #include "params_manager.h"
 #include <string>
@@ -30,7 +31,7 @@ static bool ProgramLoop()
         renderer()->DrawFrame();
     }
     else
-        throw exception("failed to read remote process memory");
+        EXCEPT("failed to read remote process memory");
 
     return true;
 }
@@ -57,11 +58,11 @@ void ProgramInit()
 
     Log("Initializing memory reader");
     if (!g_pMemoryReader->OpenRemoteProcess(processID))
-        throw exception("memory reader initializing failed");
+        EXCEPT("memory reader initializing failed");
 
     Log("Initializing renderer");
     if (!renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless))
-        throw exception("renderer initializing failed");
+        EXCEPT("renderer initializing failed");
 
     Log(
         "Starting monitoring loop\n"
@@ -75,7 +76,12 @@ void ProgramInit()
 
 void ProgramParseParams(int argc, char *argv[], app_params_t &params)
 {
-    paramsManager()->ParseParameters(argc, argv);
+    try {
+        paramsManager()->ParseParameters(argc, argv);
+    }
+    catch (exception &ex) {
+        EXCEPT(ex.what());
+    }
 
     params.processID        = paramsManager()->GetProcessID();
     params.imageWidth       = paramsManager()->GetImageWidth();

@@ -1,6 +1,7 @@
 #include "core.h"
 #include "utils.h"
 #include "params_manager.h"
+#include "exception.h"
 #include <string>
 using namespace std;
 
@@ -26,13 +27,13 @@ static void ReportParams(const app_params_t &params)
 static void CheckParams(const app_params_t &params)
 {
     if (params.processID < 0)
-        throw exception("invalid process name/ID, check for valid");
+        EXCEPT("invalid process name/ID, check for valid");
     else if (params.imageWidth == 0)
-        throw exception("invalid image width");
+        EXCEPT("invalid image width");
     else if (params.imageHeight == 0)
-        throw exception("invalid image height");
+        EXCEPT("invalid image height");
     else if (params.pixelFormat == PIXFORMAT_INVALID)
-        throw exception("invalid pixel format, must match one from list");
+        EXCEPT("invalid pixel format, must match one from list");
 }
 
 static void ShowTitleText()
@@ -96,9 +97,9 @@ int main(int argc, char *argv[])
         ReportParams(params);
         ProgramInit();
     }
-    catch (const std::exception& ex) 
+    catch (CException& ex) 
     {
-        ReportError(ex.what());
+        ReportError(ex.getDescription());
         return -1;
     }
 

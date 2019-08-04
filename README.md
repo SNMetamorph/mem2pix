@@ -1,7 +1,8 @@
 # mem2pix
-Program for visualizing arbitrary part of remote process memory in real-time<br>
+Program for visualizing arbitrary part of remote process memory in real-time.<br> May be useful for working with things like
+framebuffers/textures and tracking how these stuff content changes over the time.
 * Supports many pixel format
-* Works on Windows and Linux
+* Works on both Linux and Windows (including XP)
 * Based on SDL2 library
 ## Images
 ![Title Text](https://i.imgur.com/L3mZPy0.png)
@@ -10,7 +11,6 @@ Program for visualizing arbitrary part of remote process memory in real-time<br>
 ![Picture 3](https://i.imgur.com/2k2ou6K.png)
 
 # Building 
-> NOTE: Linux building instruction will be improved at soon time
 ## Windows
 1) Clone this repository.
 ```
@@ -18,7 +18,7 @@ git clone --recursive https://github.com/SNMetamorph/mem2pix.git
 cd mem2pix
 git submodule update --init --recursive
 ```
-2) Open CMakeLists.txt using Visual Studio 2017
+2) Open CMakeLists.txt using Visual Studio
 3) Select desired build type
 4) Build entire project
 ## Linux
@@ -34,4 +34,4 @@ make
 Result executable file will be located in /build/bin/*BUILD_TYPE* directory.
 
 # About
-This project uses [SDL2](https://www.libsdl.org/index.php) library with [zlib](https://www.libsdl.org/license.php) license.
+This project uses [SDL2](https://www.libsdl.org/index.php) library, which has [zlib](https://www.libsdl.org/license.php) license.

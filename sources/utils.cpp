@@ -9,6 +9,8 @@
 #include <Psapi.h>
 #else
 #include <unistd.h>
+#include <stdio.h>
+#include <string.h>
 #endif
 
 using namespace std;
@@ -57,6 +59,84 @@ int32_t FindProcessID(std::string& processName, size_t &processCount)
     return processID;
 #else
     return -1;
+#endif
+}
+
+bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
+{
+#ifdef WIN32
+    char *slashPos;
+    char *processName;
+    char stringBuffer[256];
+    const size_t bufferLen = sizeof(stringBuffer);
+    HANDLE processHandle = OpenProcess(
+        PROCESS_QUERY_INFORMATION, false, processID
+    );
+
+    if (processHandle)
+    {
+        stringBuffer[0] = '\0';
+        GetProcessImageFileName(
+            processHandle, stringBuffer, bufferLen
+        );
+        CloseHandle(processHandle);
+    }
+    else
+    {
+        nameBuffer[0] = '\0';
+        return false;
+    }
+
+    slashPos = strrchr(stringBuffer, '\\');
+    if (slashPos)
+        processName = slashPos + 1;
+    else
+        processName = stringBuffer;
+
+    if (strlen(stringBuffer) > 0)
+    {
+        strncpy(nameBuffer, processName, bufferSize);
+        return true;
+    }
+
+    return false;
+#else
+    FILE *fileHandle;
+    char *lastSlash;
+    char *processName;
+    char stringBuffer[256];
+    const size_t bufferLen = sizeof(stringBuffer);
+
+    snprintf(
+        stringBuffer, bufferLen, 
+        "/proc/%d/cmdline", processID
+    );
+    fileHandle = fopen(stringBuffer, "rb");
+    if (!fileHandle)
+    {
+        nameBuffer[0] = '\0';
+        return false;
+    }
+
+    fread(stringBuffer, bufferLen, 1, fileHandle);
+    stringBuffer[bufferLen - 1] = '\0';
+    lastSlash = strrchr(stringBuffer, '/');
+
+    if (lastSlash)
+        processName = lastSlash + 1;
+    else 
+        processName = stringBuffer;
+
+    if (strlen(stringBuffer) > 0)
+    {
+        strncpy(nameBuffer, processName, bufferSize);
+        fclose(fileHandle);
+        return true;
+    }
+
+    nameBuffer[0] = '\0';
+    fclose(fileHandle);
+    return false;
 #endif
 }
 

@@ -5,9 +5,36 @@
 #include "mem_reader.h"
 #include "params_manager.h"
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 IMemoryReader *g_pMemoryReader;
+
+static void UpdateWindowTitle()
+{
+    int32_t processID;
+    uint8_t *dataOffset;
+    uint32_t imageWidth;
+    uint32_t imageHeight;
+    char processName[256];
+    char titleString[256];
+    const char *pixelFormatAlias;
+
+    processID = paramsManager()->GetProcessID();
+    dataOffset = paramsManager()->GetDataAddress();
+    imageWidth = paramsManager()->GetImageWidth();
+    imageHeight = paramsManager()->GetImageHeight();
+    pixelFormatAlias = paramsManager()->GetPixelFormatAlias(
+        paramsManager()->GetPixelFormat()
+    );
+    GetProcessName(processID, processName, sizeof(processName));
+
+    snprintf(
+        titleString, sizeof(titleString), "%s | 0x%X | %dx%d (%s)",
+        processName, dataOffset, imageWidth, imageHeight, pixelFormatAlias
+    );
+    renderer()->UpdateWindowTitle(titleString);
+}
 
 static bool ProgramLoop()
 {
@@ -55,6 +82,7 @@ void ProgramInit()
     imageHeight = paramsManager()->GetImageHeight();
     pixelFormat = paramsManager()->GetPixelFormat();
     isBorderless = paramsManager()->IsBorderlessMode();
+    UpdateWindowTitle();
 
     Log("Initializing memory reader");
     if (!g_pMemoryReader->OpenRemoteProcess(processID))
@@ -62,13 +90,14 @@ void ProgramInit()
 
     Log("Initializing renderer");
     renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless);
-
+    
     Log(
         "Starting monitoring loop\n"
         "\n"
         "Usage tips:\n"
         "  Hold LMB to drag window\n"
         "  Press RMB to close window\n"
+        "\n"
     );
     while (ProgramLoop());
 }
@@ -88,3 +117,4 @@ void ProgramParseParams(int argc, char *argv[], app_params_t &params)
     params.pixelFormat      = paramsManager()->GetPixelFormat();
     params.dataAddress      = paramsManager()->GetDataAddress();
 }
+

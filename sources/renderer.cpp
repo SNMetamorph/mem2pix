@@ -35,6 +35,7 @@ CRenderer::CRenderer()
     m_iRefreshRate      = 60;
     m_isFollowCursor    = false;
     m_isLegacyDragMethod = false;
+    strcpy(m_szWindowTitle, "mem2pix");
 }
 
 CRenderer::~CRenderer()
@@ -72,7 +73,7 @@ void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
         windowFlags |= SDL_WINDOW_BORDERLESS;
 
     m_pWindow = SDL_CreateWindow(
-        "mem2pix",              // window title
+        m_szWindowTitle,        // window title
         SDL_WINDOWPOS_CENTERED, // x position
         SDL_WINDOWPOS_CENTERED, // y position
         width,                  // window width
@@ -117,6 +118,13 @@ void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
     m_iWindowWidth  = width;
     m_iWindowHeight = height;
     m_iRefreshRate  = displayMode.refresh_rate;
+}
+
+void CRenderer::UpdateWindowTitle(const char *title)
+{
+    strncpy(m_szWindowTitle, title, sizeof(m_szWindowTitle));
+    if (m_pWindow)
+        SDL_SetWindowTitle(m_pWindow, m_szWindowTitle);
 }
 
 bool CRenderer::HandleEvents()

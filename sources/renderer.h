@@ -14,6 +14,7 @@ public:
         uint32_t width, uint32_t height, 
         pixformat_t pixFormat, bool isBorderless
     );
+    void UpdateWindowTitle(const char *title);
     bool HandleEvents();
     void UpdateTexture();
     void DrawFrame();
@@ -44,6 +45,7 @@ private:
     uint32_t        m_iRefreshRate;
     bool            m_isFollowCursor;
     bool            m_isLegacyDragMethod;
+    char            m_szWindowTitle[256];
 };
 
 // for suitable access to instance

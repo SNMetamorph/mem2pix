@@ -61,8 +61,7 @@ void ProgramInit()
         EXCEPT("memory reader initializing failed");
 
     Log("Initializing renderer");
-    if (!renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless))
-        EXCEPT("renderer initializing failed");
+    renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless);
 
     Log(
         "Starting monitoring loop\n"

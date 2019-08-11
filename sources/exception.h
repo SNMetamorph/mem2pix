@@ -1,7 +1,7 @@
 #pragma once
 
 // Universal macros
-#define EXCEPT(m) (throw CException(m, __FUNCTION__, __FILE__, __LINE__))
+#define EXCEPT(message) (throw CException(message, __FUNCTION__, __FILE__, __LINE__))
 
 class CException
 {

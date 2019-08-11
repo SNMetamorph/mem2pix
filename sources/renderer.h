@@ -10,7 +10,7 @@ class CRenderer
 {
 public:
     static CRenderer& Instance();
-    bool Init(
+    void Init(
         uint32_t width, uint32_t height, 
         pixformat_t pixFormat, bool isBorderless
     );
@@ -29,7 +29,7 @@ private:
 
     void Dispatch();
     bool AllocFramebuffer();
-    void FillFramebufferSize();
+    void CalcFramebufferSize();
     SDL_PixelFormatEnum GetPixelFormat(
         pixformat_t pixFormat
     );
@@ -43,6 +43,7 @@ private:
     uint32_t        m_iWindowHeight;
     uint32_t        m_iRefreshRate;
     bool            m_isFollowCursor;
+    bool            m_isLegacyDragMethod;
 };
 
 // for suitable access to instance

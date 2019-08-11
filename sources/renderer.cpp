@@ -1,6 +1,18 @@
 #include "renderer.h"
+#include "exception.h"
+#include "utils.h"
 #include <stdint.h>
 #include <string.h>
+
+static SDL_HitTestResult HitTestCallback(
+    SDL_Window *window, const SDL_Point *area, void *data)
+{
+    uint32_t buttonMask = SDL_GetGlobalMouseState(NULL, NULL);
+    if (buttonMask & SDL_BUTTON(SDL_BUTTON_LEFT))
+        return SDL_HITTEST_DRAGGABLE;
+    else
+        return SDL_HITTEST_NORMAL;
+}
 
 CRenderer& CRenderer::Instance()
 {
@@ -22,6 +34,7 @@ CRenderer::CRenderer()
     m_iFramebufferSize  = 0;
     m_iRefreshRate      = 60;
     m_isFollowCursor    = false;
+    m_isLegacyDragMethod = false;
 }
 
 CRenderer::~CRenderer()
@@ -46,12 +59,15 @@ void CRenderer::Dispatch()
     SDL_Quit();
 }
 
-bool CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, bool isBorderless)
+void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, bool isBorderless)
 {
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-        return false;
+    uint32_t windowFlags;
+    SDL_DisplayMode displayMode;
 
-    uint32_t windowFlags = SDL_WINDOW_SHOWN;
+    if (SDL_Init(SDL_INIT_VIDEO) != 0)
+        EXCEPT("SDL initialization failed");
+
+    windowFlags = SDL_WINDOW_SHOWN;
     if (isBorderless || width < 90)
         windowFlags |= SDL_WINDOW_BORDERLESS;
 
@@ -64,85 +80,103 @@ bool CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
         windowFlags             // flags
     );
     if (!m_pWindow)
-        return false;
+        EXCEPT("failed to create window");
 
     m_pRenderer = SDL_CreateRenderer(
         m_pWindow, -1, 
         SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
     );
     if (!m_pRenderer)
-        return false;
+        EXCEPT("failed to create renderer");
 
     m_pTexture = SDL_CreateTexture(
         m_pRenderer, GetPixelFormat(pixFormat), 
         SDL_TEXTUREACCESS_STREAMING, width, height
     );
     if (!m_pTexture)
-        return false;
+        EXCEPT("failed to create texture");
 
-    FillFramebufferSize();
+    CalcFramebufferSize();
     if (!AllocFramebuffer())
-        return false;
+        EXCEPT("failed to allocate framebuffer");
 
-    SDL_DisplayMode displayMode;
+    if (SDL_SetWindowHitTest(m_pWindow, HitTestCallback, NULL) == -1)
+    {
+        m_isLegacyDragMethod = true;
+        if (windowFlags & SDL_WINDOW_BORDERLESS)
+        {
+            Log(
+                "SetWindowHitTest() failed, will be used "
+                "legacy window dragging method"
+            );
+        }
+    }
+
     SDL_GetCurrentDisplayMode(0, &displayMode);
     SDL_CaptureMouse(SDL_TRUE);
     m_iWindowWidth  = width;
     m_iWindowHeight = height;
     m_iRefreshRate  = displayMode.refresh_rate;
-
-    return true;
 }
 
 bool CRenderer::HandleEvents()
 {
     SDL_Event event;
     while (SDL_PollEvent(&event) != 0)
-    { 
+    {
         SDL_MouseButtonEvent &evButton = event.button;
         SDL_MouseMotionEvent &evMotion = event.motion;
+        uint32_t windowFlags = SDL_GetWindowFlags(m_pWindow);
+        bool windowInFocus = windowFlags & SDL_WINDOW_MOUSE_FOCUS;
 
         if (event.type == SDL_QUIT)
+        {
             return false;
+        }
         else if (event.type == SDL_MOUSEBUTTONDOWN)
         {
             if (evButton.button == SDL_BUTTON_RIGHT)
             {
-                uint32_t windowFlags = SDL_GetWindowFlags(m_pWindow);
-                if (windowFlags & SDL_WINDOW_MOUSE_FOCUS)
+                if (windowInFocus)
                     return false;
             }
+        }
 
-            if (evButton.button == SDL_BUTTON_LEFT)
-            {
-                if (evButton.state == SDL_PRESSED)
-                    m_isFollowCursor = true;
-            }
-        }
-        else if (event.type == SDL_MOUSEBUTTONUP)
+        if (m_isLegacyDragMethod)
         {
-            if (evButton.button == SDL_BUTTON_LEFT)
+            if (event.type == SDL_MOUSEBUTTONDOWN)
             {
-                if (evButton.state == SDL_RELEASED)
-                    m_isFollowCursor = false;
+                if (evButton.button == SDL_BUTTON_LEFT)
+                {
+                    if (windowInFocus && evButton.state == SDL_PRESSED)
+                        m_isFollowCursor = true;
+                }
             }
-        }
-        else if (event.type == SDL_MOUSEMOTION)
-        {
-            if (m_isFollowCursor)
+            else if (event.type == SDL_MOUSEBUTTONUP)
             {
-                int windowX, windowY;
-                SDL_GetGlobalMouseState(&windowX, &windowY);
-                windowX -= m_iWindowWidth / 2;
-                windowY -= m_iWindowHeight / 2;
-                SDL_SetWindowPosition(m_pWindow, windowX, windowY);
+                if (evButton.button == SDL_BUTTON_LEFT)
+                {
+                    if (windowInFocus && evButton.state == SDL_RELEASED)
+                        m_isFollowCursor = false;
+                }
+            }
+            else if (event.type == SDL_MOUSEMOTION)
+            {
+                if (m_isFollowCursor)
+                {
+                    int windowX, windowY;
+                    SDL_GetGlobalMouseState(&windowX, &windowY);
+                    windowX -= m_iWindowWidth / 2;
+                    windowY -= m_iWindowHeight / 2;
+                    SDL_SetWindowPosition(m_pWindow, windowX, windowY);
+                }
             }
         }
     }
     return true;
 }
 
-void CRenderer::FillFramebufferSize()
+void CRenderer::CalcFramebufferSize()
 {
     int rowSize;
     int textureWidth; 

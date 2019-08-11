@@ -54,15 +54,23 @@ target_include_directories (${PROJECT_NAME} PRIVATE
 
 # configure compiler
 set_compiler_runtime (${PROJECT_NAME} STATIC)
-enable_winxp_support(${PROJECT_NAME})
 
-# disable CRT warnings
 if (MSVC)
+	# disable CRT warnings
 	add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-endif ()
 
-# disable D3D11 render for SDL2 library (for WinXP support)
-set (HAVE_D3D11_H FALSE CACHE INTERNAL "")
+	# enable WinXP support
+	enable_winxp_support(${PROJECT_NAME})
+
+	# disable D3D11 render for SDL2 library (for WinXP compatibility)
+	set (HAVE_D3D11_H FALSE CACHE INTERNAL "")
+
+	# set PSAPI version (for WinXP compatibility)
+	add_compile_definitions(PSAPI_VERSION=1)
+
+	# include PSAPI static library
+	target_link_libraries(${PROJECT_NAME} psapi)
+endif ()
 
 # link SDL2 library to project
 target_link_libraries (${PROJECT_NAME} SDL2)

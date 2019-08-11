@@ -79,6 +79,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
     for (int i = 1; i < argc; ++i)
     {
         string parameter = argv[i];
+        // params with argument
         if (i < argc - 1)
         {
             if (parameter.compare("-p") == 0)
@@ -110,18 +111,21 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
                 }
 
                 SetProcessID(processID);
+                continue;
             }
             else if (parameter.compare("-w") == 0)
             {
                 string argument = argv[++i];
                 uint32_t width = stoi(argument, nullptr, 0);
                 SetImageWidth(width);
+                continue;
             }
             else if (parameter.compare("-h") == 0)
             {
                 string argument = argv[++i];
                 uint32_t height = stoi(argument, nullptr, 0);
                 SetImageHeight(height);
+                continue;
             }
             else if (parameter.compare("-o") == 0)
             {
@@ -136,6 +140,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
 
                 address = reinterpret_cast<uint8_t*>(offset);
                 SetDataAddress(address);
+                continue;
             }
             else if (parameter.compare("-f") == 0)
             {
@@ -148,13 +153,13 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
                         break;
                     }
                 }
+                continue;
             }
         }
-        else
-        {
-            if (parameter.compare("-b") == 0)
-                m_AppParams.borderlessMode = true;
-        }
+
+        // params without argument
+        if (parameter.compare("-b") == 0)
+            m_AppParams.borderlessMode = true;
     }
 }
 

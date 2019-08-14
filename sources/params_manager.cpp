@@ -160,6 +160,8 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
         // params without argument
         if (parameter.compare("-b") == 0)
             m_AppParams.borderlessMode = true;
+        else
+            EXCEPT("unknown startup parameter");
     }
 }
 

@@ -180,15 +180,13 @@ void CParamsManager::GetFormatAliasList(char *stringBuffer, size_t bufferSize)
     size_t printedValues = 0;
     const size_t valuesInRow = 6;
 
-    snprintf(linePrefix, sizeof(linePrefix), "%15c", ' ');
+    snprintf(linePrefix, sizeof(linePrefix), "%12c", ' ');
     memset(lineBuffer, 0, sizeof(lineBuffer));
+    strncat(stringBuffer, linePrefix, bufferSize);
 
     for (pixformat_entry_t &entry : m_FormatList)
     {
-        if (printedValues == 0)
-            strncat(stringBuffer, linePrefix, bufferSize);
-
-        snprintf(lineBuffer, sizeof(lineBuffer), "%-10s", entry.stringAlias);
+        snprintf(lineBuffer, sizeof(lineBuffer), "%-11s", entry.stringAlias);
 
         if (printedValues % valuesInRow == (valuesInRow - 1))
         {

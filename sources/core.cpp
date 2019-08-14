@@ -12,8 +12,8 @@ IMemoryReader *g_pMemoryReader;
 
 static void UpdateWindowTitle()
 {
+    size_t dataOffset;
     int32_t processID;
-    uint32_t dataOffset;
     uint32_t imageWidth;
     uint32_t imageHeight;
     char processName[256];
@@ -23,7 +23,7 @@ static void UpdateWindowTitle()
     processID = paramsManager()->GetProcessID();
     imageWidth = paramsManager()->GetImageWidth();
     imageHeight = paramsManager()->GetImageHeight();
-    dataOffset = reinterpret_cast<uint32_t>(
+    dataOffset = reinterpret_cast<size_t>(
         paramsManager()->GetDataAddress()
     );
     pixelFormatAlias = paramsManager()->GetPixelFormatAlias(

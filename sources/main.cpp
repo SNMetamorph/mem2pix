@@ -2,6 +2,7 @@
 #include "utils.h"
 #include "params_manager.h"
 #include "exception.h"
+#include "project_info.h"
 #include <string>
 using namespace std;
 
@@ -46,7 +47,7 @@ static void ShowTitleText()
     printf(
         "\n"
         "  mem2pix - utility for visualizing process memory content as image\n"
-        "  Version :  1.0\n" 
+        "  Version :  %s\n" 
         "  Usage   :  mem2pix <required params> [optional params]\n"
         "\n"
         "  Required parameters:\n"
@@ -58,7 +59,7 @@ static void ShowTitleText()
         "%s\n"
         "  Optional parameters:\n"
         "     -b   : Force borderless window mode"
-        "\n", aliasList
+        "\n", APP_VERSION, aliasList
     );
 }
 

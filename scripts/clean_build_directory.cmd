@@ -1,6 +1,11 @@
 @echo off
 cd ..
 cd build
-rmdir /S /Q "bin"
-rmdir /S /Q "cache"
-echo Build directory successfully cleaned up
+if %ERRORLEVEL% EQU 0 (
+    rmdir /S /Q "bin"
+    rmdir /S /Q "cache"
+    echo Build directory cleaned up
+) else (
+    echo Cleaning failed
+    pause
+)

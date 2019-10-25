@@ -8,11 +8,13 @@ class CException
 public:
 	CException(const char *_desc, const char *_funcName, const char *_filePath, int _line);
     ~CException() {};
+
 	const char *getFormattedMessage();
-	const char *getDescription();
-	const char *getFunctionName();
-	const char *getFileName();
-	int			getLineNumber();
+	const char *getDescription() const;
+	const char *getFunctionName() const;
+	const char *getFileName() const;
+	int			getLineNumber() const;
+
 	char m_szMessageBuffer[256];
 
 private:

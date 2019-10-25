@@ -25,22 +25,22 @@ const char *CException::getFormattedMessage()
 	return m_szMessageBuffer;
 }
 
-const char *CException::getDescription()
+const char *CException::getDescription() const
 {
 	return m_szDescription;
 }
 
-const char *CException::getFunctionName()
+const char *CException::getFunctionName() const
 {
 	return m_szFuncName;
 }
 
-const char *CException::getFileName()
+const char *CException::getFileName() const
 {
 	return strrchr(m_szFilePath, '\\') + 1;
 }
 
-int CException::getLineNumber()
+int CException::getLineNumber() const
 {
 	return m_iLine;
 }

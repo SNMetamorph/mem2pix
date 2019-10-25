@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
         ReportParams(params);
         ProgramInit();
     }
-    catch (CException& ex) 
+    catch (const CException& ex) 
     {
         ReportError(ex.getDescription());
         return -1;

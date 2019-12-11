@@ -7,7 +7,6 @@
 #include <string>
 #include <stdio.h>
 
-using namespace std;
 IMemoryReader *g_pMemoryReader;
 
 static void UpdateWindowTitle()
@@ -109,13 +108,14 @@ void ProgramParseParams(int argc, char *argv[], app_params_t &params)
     try {
         paramsManager()->ParseParameters(argc, argv);
     }
-    catch (exception &ex) {
+    // catch STL functions exceptions
+    catch (std::exception &ex) {
         EXCEPT(ex.what());
     }
 
     params.processID        = paramsManager()->GetProcessID();
     params.imageWidth       = paramsManager()->GetImageWidth();
-    params.imageHeight      = paramsManager()->GetImageWidth();
+    params.imageHeight      = paramsManager()->GetImageHeight();
     params.pixelFormat      = paramsManager()->GetPixelFormat();
     params.dataAddress      = paramsManager()->GetDataAddress();
 }

@@ -1,33 +1,13 @@
 #include "utils.h"
-#include <cctype>
-#include <iostream>
 
-#ifdef WIN32
 // Windows API headers
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <Psapi.h>
-#else
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#endif
 
-using namespace std;
 
-bool IsDigitString(std::string& str)
+int32_t FindProcessID(std::string &processName, size_t &processCount)
 {
-    for (char &symbol : str)
-    {
-        if (!isdigit(symbol))
-            return false;
-    }
-    return true;
-}
-
-int32_t FindProcessID(std::string& processName, size_t &processCount)
-{
-#ifdef WIN32
     int32_t processID;
     HANDLE processSnapshot;
     PROCESSENTRY32 processEntry;
@@ -57,14 +37,10 @@ int32_t FindProcessID(std::string& processName, size_t &processCount)
 
     CloseHandle(processSnapshot);
     return processID;
-#else
-    return -1;
-#endif
 }
 
 bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
 {
-#ifdef WIN32
     char *slashPos;
     char *processName;
     char stringBuffer[256];
@@ -100,49 +76,10 @@ bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
     }
 
     return false;
-#else
-    FILE *fileHandle;
-    char *lastSlash;
-    char *processName;
-    char stringBuffer[256];
-    const size_t bufferLen = sizeof(stringBuffer);
-
-    snprintf(
-        stringBuffer, bufferLen, 
-        "/proc/%d/cmdline", processID
-    );
-    fileHandle = fopen(stringBuffer, "rb");
-    if (!fileHandle)
-    {
-        nameBuffer[0] = '\0';
-        return false;
-    }
-
-    fread(stringBuffer, bufferLen, 1, fileHandle);
-    stringBuffer[bufferLen - 1] = '\0';
-    lastSlash = strrchr(stringBuffer, '/');
-
-    if (lastSlash)
-        processName = lastSlash + 1;
-    else 
-        processName = stringBuffer;
-
-    if (strlen(stringBuffer) > 0)
-    {
-        strncpy(nameBuffer, processName, bufferSize);
-        fclose(fileHandle);
-        return true;
-    }
-
-    nameBuffer[0] = '\0';
-    fclose(fileHandle);
-    return false;
-#endif
 }
 
 bool IsValidProcessID(int32_t processID)
 {
-#ifdef WIN32
     HANDLE processSnapshot;
     PROCESSENTRY32 processEntry;
 
@@ -169,17 +106,4 @@ bool IsValidProcessID(int32_t processID)
 
     CloseHandle(processSnapshot);
     return false;
-#else
-    return getpgid(processID) >= 0;
-#endif
-}
-
-void ReportError(const char *errorMessage)
-{
-    cout << "ERROR: " << errorMessage << endl;
-}
-
-void Log(const char *message)
-{
-    cout << message << endl;
 }

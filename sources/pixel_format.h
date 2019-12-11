@@ -2,7 +2,7 @@
     Pixel format header
 */
 #pragma once
-#include <list>
+#include <vector>
 
 enum pixformat_t
 {
@@ -52,4 +52,4 @@ struct pixformat_entry_t
     pixformat_t pixelFormat;
 };
 
-typedef std::list<pixformat_entry_t> formatlist_t;
+typedef std::vector<pixformat_entry_t> formatlist_t;

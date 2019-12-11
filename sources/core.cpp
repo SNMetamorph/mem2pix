@@ -7,7 +7,6 @@
 #include <string>
 #include <stdio.h>
 
-IMemoryReader *g_pMemoryReader;
 
 static void UpdateWindowTitle()
 {
@@ -55,6 +54,7 @@ static bool ProgramLoop()
     {
         if (!renderer()->HandleEvents())
             return false;
+
         renderer()->UpdateTexture();
         renderer()->DrawFrame();
     }
@@ -93,7 +93,7 @@ void ProgramInit()
     renderer()->Init(imageWidth, imageHeight, pixelFormat, isBorderless);
     
     Log(
-        "Starting monitoring loop\n"
+        "Visualizing started\n"
         "\n"
         "Usage tips:\n"
         "  Hold LMB to drag window\n"

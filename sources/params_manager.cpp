@@ -5,7 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 
-using namespace std;
 
 CParamsManager *paramsManager()
 {
@@ -20,16 +19,16 @@ CParamsManager& CParamsManager::Instance()
 
 CParamsManager::CParamsManager()
 {
-    m_AppParams.imageWidth    = 0;
-    m_AppParams.imageHeight   = 0;
-    m_AppParams.processID     = -1;
-    m_AppParams.dataAddress   = nullptr;
-    m_AppParams.pixelFormat   = PIXFORMAT_INVALID;
-    m_AppParams.borderlessMode = false;
-    FillFormatList();
+    m_AppParams.imageWidth      = 0;
+    m_AppParams.imageHeight     = 0;
+    m_AppParams.processID       = -1;
+    m_AppParams.dataAddress     = nullptr;
+    m_AppParams.pixelFormat     = PIXFORMAT_INVALID;
+    m_AppParams.borderlessMode  = false;
+    SetupFormatList();
 }
 
-void CParamsManager::FillFormatList()
+void CParamsManager::SetupFormatList()
 {
     m_FormatList = {
         {"rgb888",      PIXFORMAT_RGB888},
@@ -78,7 +77,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
 {
     for (int i = 1; i < argc; ++i)
     {
-        string parameter = argv[i];
+        std::string parameter = argv[i];
         // params with argument
         if (i < argc - 1)
         {
@@ -86,7 +85,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             {
                 int32_t processID;
                 size_t processCount;
-                string argument = argv[++i];
+                std::string argument = argv[++i];
                 
                 if (IsDigitString(argument))
                 {
@@ -115,14 +114,14 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             }
             else if (parameter.compare("-w") == 0)
             {
-                string argument = argv[++i];
+                std::string argument = argv[++i];
                 uint32_t width = stoi(argument, nullptr, 0);
                 SetImageWidth(width);
                 continue;
             }
             else if (parameter.compare("-h") == 0)
             {
-                string argument = argv[++i];
+                std::string argument = argv[++i];
                 uint32_t height = stoi(argument, nullptr, 0);
                 SetImageHeight(height);
                 continue;
@@ -131,7 +130,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             {
                 uint8_t *address;
                 uint64_t offset;
-                string argument = argv[++i];
+                std::string argument = argv[++i];
 
                 if (IsDigitString(argument))
                     offset = stoll(argument, nullptr, 0);
@@ -144,7 +143,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             }
             else if (parameter.compare("-f") == 0)
             {
-                string argument = argv[++i];
+                std::string argument = argv[++i];
                 for (pixformat_entry_t &entry : m_FormatList)
                 {
                     if (argument.compare(entry.stringAlias) == 0)
@@ -175,7 +174,7 @@ const char *CParamsManager::GetPixelFormatAlias(pixformat_t pixelFormat)
     return nullptr;
 }
 
-void CParamsManager::GetFormatAliasList(char *stringBuffer, size_t bufferSize)
+void CParamsManager::SetupFormatAliasList(char *stringBuffer, size_t bufferSize)
 {
     char lineBuffer[64];
     char linePrefix[32];

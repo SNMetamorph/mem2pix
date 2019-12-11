@@ -2,45 +2,50 @@
 #include <cstring>
 #include "exception.h"
 
-CException::CException(const char *_desc, const char *_funcName, const char *_fileName, int _line)
+CException::CException(
+    const char *description, 
+    const char *funcName, 
+    const char *sourceFilePath, 
+    int lineNumber
+)
 {
-	m_szFuncName = _funcName;
-	m_szFilePath = _fileName;
-	m_szDescription = _desc;
-	m_iLine = _line;
+	m_szFuncName = funcName;
+	m_szFilePath = sourceFilePath;
+	m_szDescription = description;
+	m_iLineNumber = lineNumber;
     m_szMessageBuffer[0] = '\0';
 }
 
-const char *CException::getFormattedMessage()
+const char *CException::GetFormattedMessage()
 {
 	snprintf(
 		m_szMessageBuffer, 
 		sizeof(m_szMessageBuffer), 
 		"%s() [%s:%d]: %s\n", 
 		m_szFuncName, 
-		getFileName(), 
-		m_iLine, 
+		GetFileName(), 
+		m_iLineNumber, 
 		m_szDescription
 	);
 	return m_szMessageBuffer;
 }
 
-const char *CException::getDescription() const
+const char *CException::GetDescription() const
 {
 	return m_szDescription;
 }
 
-const char *CException::getFunctionName() const
+const char *CException::GetFunctionName() const
 {
 	return m_szFuncName;
 }
 
-const char *CException::getFileName() const
+const char *CException::GetFileName() const
 {
 	return strrchr(m_szFilePath, '\\') + 1;
 }
 
-int CException::getLineNumber() const
+int CException::GetLineNumber() const
 {
-	return m_iLine;
+	return m_iLineNumber;
 }

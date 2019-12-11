@@ -14,7 +14,7 @@ public:
 
     void ParseParameters(int argc, char *argv[]);
     const char *GetPixelFormatAlias(pixformat_t pixelFormat);
-    void GetFormatAliasList(char *stringBuffer, size_t stringSize);
+    void SetupFormatAliasList(char *stringBuffer, size_t stringSize);
 
     inline void SetProcessID(uint32_t processID)   { m_AppParams.processID   = processID; }
     inline void SetImageWidth(uint32_t width)      { m_AppParams.imageWidth  = width;     }
@@ -34,7 +34,7 @@ private:
     CParamsManager(const CParamsManager&) = delete;
     CParamsManager& operator=(const CParamsManager&) = delete;
 
-    void FillFormatList();
+    void SetupFormatList();
     formatlist_t m_FormatList;
     app_params_t m_AppParams;
 };

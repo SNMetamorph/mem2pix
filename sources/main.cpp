@@ -4,7 +4,6 @@
 #include "exception.h"
 #include "project_info.h"
 #include <string>
-using namespace std;
 
 static void ReportParams(const app_params_t &params)
 {
@@ -41,7 +40,7 @@ static void ShowTitleText()
 {
     static char aliasList[2048];
     aliasList[0] = '\0';
-    paramsManager()->GetFormatAliasList(
+    paramsManager()->SetupFormatAliasList(
         aliasList, sizeof(aliasList)
     );
     printf(
@@ -95,9 +94,9 @@ int main(int argc, char *argv[])
         ReportParams(params);
         ProgramInit();
     }
-    catch (const CException& ex) 
+    catch (const CException &ex) 
     {
-        ReportError(ex.getDescription());
+        ReportError(ex.GetDescription());
         return -1;
     }
 

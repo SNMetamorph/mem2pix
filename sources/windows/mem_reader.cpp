@@ -1,5 +1,7 @@
 #include "mem_reader.h"
 
+IMemoryReader *g_pMemoryReader;
+
 CMemoryReaderWin32::~CMemoryReaderWin32()
 {
     CloseRemoteProcess();

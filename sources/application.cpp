@@ -153,7 +153,7 @@ void CApplication::ReportParams()
     std::printf(
         "Parameters:\n"
         "  Process ID     : %d\n"
-        "  Data offset    : 0x%X\n"
+        "  Data offset    : 0x%zX\n"
         "  Image size     : %dx%d\n"
         "  Pixel format   : %s\n"
         "\n",
@@ -185,6 +185,6 @@ void CApplication::ShowTitleText()
         "%s\n"
         "  Optional parameters:\n"
         "     -b   : Force borderless window mode"
-        "\n", APP_VERSION, aliasList
+        "\n", APP_VERSION_STRING, aliasList
     );
 }

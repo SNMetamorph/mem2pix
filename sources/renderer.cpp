@@ -49,7 +49,7 @@ void CRenderer::Dispatch()
     SDL_Quit();
 }
 
-void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, bool isBorderless)
+void CRenderer::Init(uint32_t width, uint32_t height, PixelFormat pixFormat, bool isBorderless)
 {
     uint32_t windowFlags;
     SDL_DisplayMode displayMode;
@@ -217,86 +217,85 @@ void CRenderer::DrawFrame()
     SDL_Delay(1000 / m_iRefreshRate);
 }
 
-SDL_PixelFormatEnum CRenderer::GetPixelFormat(pixformat_t pixFormat)
+SDL_PixelFormatEnum CRenderer::GetPixelFormat(PixelFormat pixFormat)
 {
     switch (pixFormat)
     {
-        case PIXFORMAT_GRAYSCALE8:
+        case PixelFormat::Grayscale8:
             return SDL_PIXELFORMAT_INDEX8;
-        case PIXFORMAT_RGB332:
+        case PixelFormat::RGB332:
             return SDL_PIXELFORMAT_RGB332;
-        case PIXFORMAT_RGB444:
+        case PixelFormat::RGB444:
             return SDL_PIXELFORMAT_RGB444;
-        case PIXFORMAT_RGB555:
+        case PixelFormat::RGB555:
             return SDL_PIXELFORMAT_RGB555;
-        case PIXFORMAT_BGR555:
+        case PixelFormat::BGR555:
             return SDL_PIXELFORMAT_BGR555;
-        case PIXFORMAT_ARGB4444:
+        case PixelFormat::ARGB4444:
             return SDL_PIXELFORMAT_ARGB4444;
-        case PIXFORMAT_RGBA4444:
+        case PixelFormat::RGBA4444:
             return SDL_PIXELFORMAT_RGBA4444;
-        case PIXFORMAT_ABGR4444:
+        case PixelFormat::ABGR4444:
             return SDL_PIXELFORMAT_ABGR4444;
-        case PIXFORMAT_BGRA4444:
+        case PixelFormat::BGRA4444:
             return SDL_PIXELFORMAT_BGRA4444;
-        case PIXFORMAT_ARGB1555:
+        case PixelFormat::ARGB1555:
             return SDL_PIXELFORMAT_ARGB1555;
-        case PIXFORMAT_RGBA5551:
+        case PixelFormat::RGBA5551:
             return SDL_PIXELFORMAT_RGBA5551;
-        case PIXFORMAT_ABGR1555:
+        case PixelFormat::ABGR1555:
             return SDL_PIXELFORMAT_ABGR1555;
-        case PIXFORMAT_BGRA5551:
+        case PixelFormat::BGRA5551:
             return SDL_PIXELFORMAT_BGRA5551;
-        case PIXFORMAT_RGB565:
+        case PixelFormat::RGB565:
             return SDL_PIXELFORMAT_RGB565;
-        case PIXFORMAT_BGR565:
+        case PixelFormat::BGR565:
             return SDL_PIXELFORMAT_BGR565;
-        case PIXFORMAT_RGB24:
+        case PixelFormat::RGB24:
             return SDL_PIXELFORMAT_RGB24;
-        case PIXFORMAT_BGR24:
+        case PixelFormat::BGR24:
             return SDL_PIXELFORMAT_BGR24;
-        case PIXFORMAT_RGB888:
+        case PixelFormat::RGB888:
             return SDL_PIXELFORMAT_RGB888;
-        case PIXFORMAT_RGBX8888:
+        case PixelFormat::RGBX8888:
             return SDL_PIXELFORMAT_RGBX8888;
-        case PIXFORMAT_BGR888:
+        case PixelFormat::BGR888:
             return SDL_PIXELFORMAT_BGR888;
-        case PIXFORMAT_BGRX8888:
+        case PixelFormat::BGRX8888:
             return SDL_PIXELFORMAT_BGRX8888;
-        case PIXFORMAT_ARGB8888:
+        case PixelFormat::ARGB8888:
             return SDL_PIXELFORMAT_ARGB8888;
-        case PIXFORMAT_RGBA8888:
+        case PixelFormat::RGBA8888:
             return SDL_PIXELFORMAT_RGBA8888;
-        case PIXFORMAT_ABGR8888:
+        case PixelFormat::ABGR8888:
             return SDL_PIXELFORMAT_ABGR8888;
-        case PIXFORMAT_BGRA8888:
+        case PixelFormat::BGRA8888:
             return SDL_PIXELFORMAT_BGRA8888;
-        case PIXFORMAT_ARGB2101010:
+        case PixelFormat::ARGB2101010:
             return SDL_PIXELFORMAT_ARGB2101010;
-        case PIXFORMAT_RGBA32:
+        case PixelFormat::RGBA32:
             return SDL_PIXELFORMAT_RGBA32;
-        case PIXFORMAT_ARGB32:
+        case PixelFormat::ARGB32:
             return SDL_PIXELFORMAT_ARGB32;
-        case PIXFORMAT_BGRA32:
+        case PixelFormat::BGRA32:
             return SDL_PIXELFORMAT_BGRA32;
-        case PIXFORMAT_ABGR32:
+        case PixelFormat::ABGR32:
             return SDL_PIXELFORMAT_ABGR32;
-        case PIXFORMAT_YV12:
+        case PixelFormat::YV12:
             return SDL_PIXELFORMAT_YV12;
-        case PIXFORMAT_IYUV:
+        case PixelFormat::IYUV:
             return SDL_PIXELFORMAT_IYUV;
-        case PIXFORMAT_YUY2:
+        case PixelFormat::YUY2:
             return SDL_PIXELFORMAT_UYVY;
-        case PIXFORMAT_UYVY:
+        case PixelFormat::UYVY:
             return SDL_PIXELFORMAT_UYVY;
-        case PIXFORMAT_YVYU:
+        case PixelFormat::YVYU:
             return SDL_PIXELFORMAT_YVYU;
-        case PIXFORMAT_NV12:
+        case PixelFormat::NV12:
             return SDL_PIXELFORMAT_NV12;
-        case PIXFORMAT_NV21:
-            return SDL_PIXELFORMAT_NV21; 
+        case PixelFormat::NV21:
+            return SDL_PIXELFORMAT_NV21;
         default:
             return SDL_PIXELFORMAT_UNKNOWN;
     }
 }
-

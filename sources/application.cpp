@@ -99,7 +99,7 @@ void CApplication::StartScan()
     int32_t processID;
     uint32_t imageWidth;
     uint32_t imageHeight;
-    pixformat_t pixelFormat;
+    PixelFormat pixelFormat;
     bool isBorderless;
 
 #ifdef WIN32

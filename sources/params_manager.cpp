@@ -11,54 +11,8 @@ CParamsManager::CParamsManager()
     m_iImageHeight      = 0;
     m_iProcessID        = -1;
     m_pDataAddress      = nullptr;
-    m_PixelFormat       = PIXFORMAT_INVALID;
+    m_PixelFormat       = PixelFormat::Invalid;
     m_isBorderlessMode  = false;
-    SetupFormatList();
-}
-
-void CParamsManager::SetupFormatList()
-{
-    m_FormatList = {
-        {"rgb888",      PIXFORMAT_RGB888},
-        {"bgr888",      PIXFORMAT_BGR888},
-        {"rgb24",       PIXFORMAT_RGB24},
-        {"bgr24",       PIXFORMAT_BGR24},
-        {"rgb332",      PIXFORMAT_RGB332},
-        {"rgb444",      PIXFORMAT_RGB444},
-        {"rgb555",      PIXFORMAT_RGB555},
-        {"bgr555",      PIXFORMAT_BGR555},
-        {"rgb565",      PIXFORMAT_RGB565},
-        {"bgr565",      PIXFORMAT_BGR565},
-        {"rgba32",      PIXFORMAT_RGBA32},
-        {"argb32",      PIXFORMAT_ARGB32},
-        {"bgra32",      PIXFORMAT_BGRA32},
-        {"abgr32",      PIXFORMAT_ABGR32},
-        {"bgra32",      PIXFORMAT_BGRA32},
-        {"abgr32",      PIXFORMAT_ABGR32},
-        {"argb4444",    PIXFORMAT_ARGB4444},
-        {"rgba4444",    PIXFORMAT_RGBA4444},
-        {"abgr4444",    PIXFORMAT_ABGR4444},
-        {"bgra4444",    PIXFORMAT_BGRA4444},
-        {"argb1555",    PIXFORMAT_ARGB1555},
-        {"rgba5551",    PIXFORMAT_RGBA5551},
-        {"abgr1555",    PIXFORMAT_ABGR1555},
-        {"bgra5551",    PIXFORMAT_BGRA5551},
-        {"rgbx8888",    PIXFORMAT_RGBX8888},  
-        {"bgrx8888",    PIXFORMAT_BGRX8888},
-        {"argb8888",    PIXFORMAT_ARGB8888},
-        {"rgba8888",    PIXFORMAT_RGBA8888},
-        {"abgr8888",    PIXFORMAT_ABGR8888},
-        {"bgra8888",    PIXFORMAT_BGRA8888},
-        {"yv12",        PIXFORMAT_YV12},
-        {"iyuv",        PIXFORMAT_IYUV},
-        {"yuy2",        PIXFORMAT_YUY2},
-        {"uyvy",        PIXFORMAT_UYVY},
-        {"yvyu",        PIXFORMAT_YVYU},
-        {"argb2101010", PIXFORMAT_ARGB2101010},
-        {"nv12",        PIXFORMAT_NV12},
-        {"nv21",        PIXFORMAT_NV21},
-        {"grayscale8",  PIXFORMAT_GRAYSCALE8},
-    };
 }
 
 void CParamsManager::ParseParameters(int argc, char *argv[])
@@ -132,7 +86,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
             else if (parameter.compare("-f") == 0)
             {
                 std::string argument = argv[++i];
-                for (pixformat_entry_t &entry : m_FormatList)
+                for (const PixelFormatEntry &entry : m_FormatList)
                 {
                     if (argument.compare(entry.stringAlias) == 0)
                     {
@@ -160,13 +114,13 @@ void CParamsManager::CheckParams()
         EXCEPT("invalid image width");
     else if (m_iImageHeight == 0)
         EXCEPT("invalid image height");
-    else if (m_PixelFormat == PIXFORMAT_INVALID)
+    else if (m_PixelFormat == PixelFormat::Invalid)
         EXCEPT("invalid pixel format, must match one from list");
 }
 
-const char *CParamsManager::GetPixelFormatAlias(pixformat_t pixelFormat)
+const char *CParamsManager::GetPixelFormatAlias(PixelFormat pixelFormat)
 {
-    for (pixformat_entry_t &entry : m_FormatList)
+    for (const PixelFormatEntry &entry : m_FormatList)
     {
         if (entry.pixelFormat == pixelFormat)
             return entry.stringAlias;
@@ -185,7 +139,7 @@ void CParamsManager::SetupFormatAliasList(char *stringBuffer, size_t bufferSize)
     memset(lineBuffer, 0, sizeof(lineBuffer));
     strncat(stringBuffer, linePrefix, bufferSize);
 
-    for (pixformat_entry_t &entry : m_FormatList)
+    for (const PixelFormatEntry &entry : m_FormatList)
     {
         snprintf(lineBuffer, sizeof(lineBuffer), "%-11s", entry.stringAlias);
 
@@ -199,4 +153,3 @@ void CParamsManager::SetupFormatAliasList(char *stringBuffer, size_t bufferSize)
         ++printedValues;
     }
 }
-

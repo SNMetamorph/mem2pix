@@ -2,54 +2,45 @@
     Pixel format header
 */
 #pragma once
-#include <vector>
 
-enum pixformat_t
+enum class PixelFormat
 {
-    PIXFORMAT_INVALID,
-	PIXFORMAT_GRAYSCALE8,
-    PIXFORMAT_RGB332,
-    PIXFORMAT_RGB444,
-    PIXFORMAT_RGB555,
-    PIXFORMAT_BGR555,
-    PIXFORMAT_ARGB4444,
-    PIXFORMAT_RGBA4444,
-    PIXFORMAT_ABGR4444,
-    PIXFORMAT_BGRA4444,
-    PIXFORMAT_ARGB1555,
-    PIXFORMAT_RGBA5551,
-    PIXFORMAT_ABGR1555,
-    PIXFORMAT_BGRA5551,
-    PIXFORMAT_RGB565,
-    PIXFORMAT_BGR565,
-    PIXFORMAT_RGB24,
-    PIXFORMAT_BGR24,
-    PIXFORMAT_RGB888,
-    PIXFORMAT_RGBX8888,
-    PIXFORMAT_BGR888,
-    PIXFORMAT_BGRX8888,
-    PIXFORMAT_ARGB8888,
-    PIXFORMAT_RGBA8888,
-    PIXFORMAT_ABGR8888,
-    PIXFORMAT_BGRA8888,
-    PIXFORMAT_ARGB2101010,
-    PIXFORMAT_RGBA32,
-    PIXFORMAT_ARGB32,
-    PIXFORMAT_BGRA32,
-    PIXFORMAT_ABGR32,
-    PIXFORMAT_YV12,
-    PIXFORMAT_IYUV,
-    PIXFORMAT_YUY2,
-    PIXFORMAT_UYVY,
-    PIXFORMAT_YVYU,
-    PIXFORMAT_NV12,
-    PIXFORMAT_NV21,
+    Invalid,
+	Grayscale8,
+    RGB332,
+    RGB444,
+    RGB555,
+    BGR555,
+    ARGB4444,
+    RGBA4444,
+    ABGR4444,
+    BGRA4444,
+    ARGB1555,
+    RGBA5551,
+    ABGR1555,
+    BGRA5551,
+    RGB565,
+    BGR565,
+    RGB24,
+    BGR24,
+    RGB888,
+    RGBX8888,
+    BGR888,
+    BGRX8888,
+    ARGB8888,
+    RGBA8888,
+    ABGR8888,
+    BGRA8888,
+    ARGB2101010,
+    RGBA32,
+    ARGB32,
+    BGRA32,
+    ABGR32,
+    YV12,
+    IYUV,
+    YUY2,
+    UYVY,
+    YVYU,
+    NV12,
+    NV21,
 };
-
-struct pixformat_entry_t
-{
-    const char *stringAlias;
-    pixformat_t pixelFormat;
-};
-
-typedef std::vector<pixformat_entry_t> formatlist_t;

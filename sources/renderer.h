@@ -15,7 +15,7 @@ public:
 
     void Init(
         uint32_t width, uint32_t height, 
-        pixformat_t pixFormat, bool isBorderless
+        PixelFormat pixFormat, bool isBorderless
     );
     void UpdateWindowTitle(const std::string &title);
     bool HandleEvents();
@@ -30,7 +30,7 @@ private:
     bool AllocFramebuffer();
     void CalcFramebufferSize();
     SDL_PixelFormatEnum GetPixelFormat(
-        pixformat_t pixFormat
+        PixelFormat pixFormat
     );
 
     SDL_Window      *m_pWindow;

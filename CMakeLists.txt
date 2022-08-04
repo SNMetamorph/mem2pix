@@ -86,6 +86,9 @@ if(MSVC)
 
 	# include PSAPI static library
 	target_link_libraries(${PROJECT_NAME} psapi)
+
+	# multithreaded build flag
+	add_compile_options(/MP) 
 endif()
 
 # set static runtime

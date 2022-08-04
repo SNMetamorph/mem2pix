@@ -5,18 +5,6 @@
 #include <string.h>
 #include <stdio.h>
 
-
-CParamsManager *paramsManager()
-{
-    return &CParamsManager::Instance();
-}
-
-CParamsManager& CParamsManager::Instance()
-{
-    static CParamsManager instance;
-    return instance;
-}
-
 CParamsManager::CParamsManager()
 {
     m_AppParams.imageWidth      = 0;
@@ -87,16 +75,16 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
                 size_t processCount;
                 std::string argument = argv[++i];
                 
-                if (IsDigitString(argument))
+                if (Utils::IsDigitString(argument))
                 {
                     processID = stoi(argument, nullptr, 0);
-                    if (!IsValidProcessID(processID))
+                    if (!Utils::IsValidProcessID(processID))
                         EXCEPT("invalid process ID");
                 }
                 else
                 {
 #ifdef WIN32
-                    processID = FindProcessID(argument, processCount);
+                    processID = Utils::FindProcessID(argument, processCount);
                     if (processCount > 1)
                     {
                         EXCEPT(
@@ -132,7 +120,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
                 uint64_t offset;
                 std::string argument = argv[++i];
 
-                if (IsDigitString(argument))
+                if (Utils::IsDigitString(argument))
                     offset = stoll(argument, nullptr, 0);
                 else
                     offset = stoll(argument, nullptr, 16);
@@ -162,6 +150,18 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
         else
             EXCEPT("unknown startup parameter");
     }
+}
+
+void CParamsManager::CheckParams()
+{
+    if (m_AppParams.processID < 0)
+        EXCEPT("invalid process name/ID, check for valid");
+    else if (m_AppParams.imageWidth == 0)
+        EXCEPT("invalid image width");
+    else if (m_AppParams.imageHeight == 0)
+        EXCEPT("invalid image height");
+    else if (m_AppParams.pixelFormat == PIXFORMAT_INVALID)
+        EXCEPT("invalid pixel format, must match one from list");
 }
 
 const char *CParamsManager::GetPixelFormatAlias(pixformat_t pixelFormat)

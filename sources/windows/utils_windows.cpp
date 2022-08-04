@@ -6,7 +6,7 @@
 #include <Psapi.h>
 
 
-int32_t FindProcessID(std::string &processName, size_t &processCount)
+int32_t Utils::FindProcessID(std::string &processName, size_t &processCount)
 {
     int32_t processID;
     HANDLE processSnapshot;
@@ -39,7 +39,7 @@ int32_t FindProcessID(std::string &processName, size_t &processCount)
     return processID;
 }
 
-bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
+bool Utils::GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
 {
     char *slashPos;
     char *processName;
@@ -78,7 +78,7 @@ bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
     return false;
 }
 
-bool IsValidProcessID(int32_t processID)
+bool Utils::IsValidProcessID(int32_t processID)
 {
     HANDLE processSnapshot;
     PROCESSENTRY32 processEntry;

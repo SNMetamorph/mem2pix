@@ -10,11 +10,11 @@
 class CParamsManager
 {
 public:
-    static CParamsManager& Instance();
-
+    CParamsManager();
     void ParseParameters(int argc, char *argv[]);
     const char *GetPixelFormatAlias(pixformat_t pixelFormat);
     void SetupFormatAliasList(char *stringBuffer, size_t stringSize);
+    void CheckParams();
 
     inline void SetProcessID(uint32_t processID)   { m_AppParams.processID   = processID; }
     inline void SetImageWidth(uint32_t width)      { m_AppParams.imageWidth  = width;     }
@@ -30,14 +30,7 @@ public:
     inline bool IsBorderlessMode()      { return m_AppParams.borderlessMode; }
 
 private:
-    CParamsManager();
-    CParamsManager(const CParamsManager&) = delete;
-    CParamsManager& operator=(const CParamsManager&) = delete;
-
     void SetupFormatList();
     formatlist_t m_FormatList;
     app_params_t m_AppParams;
 };
-
-// for suitable access to singleton
-CParamsManager *paramsManager();

@@ -9,7 +9,9 @@
 class CRenderer
 {
 public:
-    static CRenderer& Instance();
+    CRenderer();
+    ~CRenderer();
+
     void Init(
         uint32_t width, uint32_t height, 
         pixformat_t pixFormat, bool isBorderless
@@ -23,11 +25,6 @@ public:
     inline uint8_t *GetFramebuffer()   { return m_pFramebuffer;     };
 
 private:
-    CRenderer();
-    ~CRenderer();
-    CRenderer(const CRenderer&) = delete;
-    CRenderer& operator=(const CRenderer&) = delete;
-
     void Dispatch();
     bool AllocFramebuffer();
     void CalcFramebufferSize();
@@ -47,6 +44,3 @@ private:
     bool            m_isLegacyDragMethod;
     char            m_szWindowTitle[256];
 };
-
-// for suitable access to instance
-CRenderer *renderer();

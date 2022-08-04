@@ -1,8 +1,7 @@
 #include "utils.h"
 #include <iostream>
 
-
-bool IsDigitString(std::string &str)
+bool Utils::IsDigitString(std::string &str)
 {
     for (char &symbol : str)
     {
@@ -12,12 +11,12 @@ bool IsDigitString(std::string &str)
     return true;
 }
 
-void ReportError(const char *errorMessage)
+void Utils::ReportError(const char *errorMessage)
 {
     std::cout << "ERROR: " << errorMessage << std::endl;
 }
 
-void Log(const char *message)
+void Utils::Log(const char *message)
 {
     std::cout << message << std::endl;
 }

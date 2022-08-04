@@ -7,13 +7,13 @@
 #include <string.h>
 
 
-int32_t FindProcessID(std::string& processName, size_t &processCount)
+int32_t Utils::FindProcessID(std::string& processName, size_t &processCount)
 {
     // just a stub
     return -1;
 }
 
-bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
+bool Utils::GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
 {
     FILE *fileHandle;
     char *lastSlash;
@@ -53,7 +53,7 @@ bool GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
     return false;
 }
 
-bool IsValidProcessID(int32_t processID)
+bool Utils::IsValidProcessID(int32_t processID)
 {
     return getpgid(processID) >= 0;
 }

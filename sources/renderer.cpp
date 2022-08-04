@@ -14,17 +14,6 @@ static SDL_HitTestResult HitTestCallback(
         return SDL_HITTEST_NORMAL;
 }
 
-CRenderer& CRenderer::Instance()
-{
-    static CRenderer instance;
-    return instance;
-}
-
-CRenderer *renderer()
-{
-    return &CRenderer::Instance();
-}
-
 CRenderer::CRenderer()
 {
     m_pWindow           = nullptr;
@@ -106,7 +95,7 @@ void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
         m_isLegacyDragMethod = true;
         if (windowFlags & SDL_WINDOW_BORDERLESS)
         {
-            Log(
+            Utils::Log(
                 "SetWindowHitTest() failed, will be used "
                 "legacy window dragging method"
             );

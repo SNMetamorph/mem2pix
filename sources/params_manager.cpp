@@ -7,12 +7,12 @@
 
 CParamsManager::CParamsManager()
 {
-    m_AppParams.imageWidth      = 0;
-    m_AppParams.imageHeight     = 0;
-    m_AppParams.processID       = -1;
-    m_AppParams.dataAddress     = nullptr;
-    m_AppParams.pixelFormat     = PIXFORMAT_INVALID;
-    m_AppParams.borderlessMode  = false;
+    m_iImageWidth       = 0;
+    m_iImageHeight      = 0;
+    m_iProcessID        = -1;
+    m_pDataAddress      = nullptr;
+    m_PixelFormat       = PIXFORMAT_INVALID;
+    m_isBorderlessMode  = false;
     SetupFormatList();
 }
 
@@ -146,7 +146,7 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
 
         // params without argument
         if (parameter.compare("-b") == 0)
-            m_AppParams.borderlessMode = true;
+            m_isBorderlessMode = true;
         else
             EXCEPT("unknown startup parameter");
     }
@@ -154,13 +154,13 @@ void CParamsManager::ParseParameters(int argc, char *argv[])
 
 void CParamsManager::CheckParams()
 {
-    if (m_AppParams.processID < 0)
+    if (m_iProcessID < 0)
         EXCEPT("invalid process name/ID, check for valid");
-    else if (m_AppParams.imageWidth == 0)
+    else if (m_iImageWidth == 0)
         EXCEPT("invalid image width");
-    else if (m_AppParams.imageHeight == 0)
+    else if (m_iImageHeight == 0)
         EXCEPT("invalid image height");
-    else if (m_AppParams.pixelFormat == PIXFORMAT_INVALID)
+    else if (m_PixelFormat == PIXFORMAT_INVALID)
         EXCEPT("invalid pixel format, must match one from list");
 }
 

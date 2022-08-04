@@ -2,7 +2,6 @@
     Core functions export
 */
 #pragma once
-#include "params.h"
 #include "params_manager.h"
 #include "renderer.h"
 

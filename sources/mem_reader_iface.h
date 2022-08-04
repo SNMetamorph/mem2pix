@@ -13,5 +13,3 @@ public:
         uint8_t *address, size_t byteCount, uint8_t *buffer) = 0;
     virtual void CloseRemoteProcess() = 0;
 };
-
-extern IMemoryReader *g_pMemoryReader;

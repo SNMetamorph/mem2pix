@@ -2,7 +2,6 @@
 #include "utils.h"
 #include "renderer.h"
 #include "exception.h"
-#include "mem_reader.h"
 #include "params_manager.h"
 #include "project_info.h"
 #include <string>
@@ -46,7 +45,7 @@ bool CApplication::ProgramLoop()
     bufferAddr = m_Renderer.GetFramebuffer();
     bufferSize = m_Renderer.GetFramebufferSize();
     remoteAddr = m_ParamsManager.GetDataAddress();
-    readStatus = g_pMemoryReader->ReadRemoteMemory(
+    readStatus = m_pMemoryReader->ReadRemoteMemory(
         remoteAddr, bufferSize, bufferAddr
     );
     
@@ -97,18 +96,18 @@ int CApplication::Initialize(int argc, char *argv[])
 
 void CApplication::StartScan()
 { 
-#ifdef WIN32
-    CMemoryReaderWin32 memReader;
-#else
-    CMemoryReaderLinux memReader;
-#endif
     int32_t processID;
     uint32_t imageWidth;
     uint32_t imageHeight;
     pixformat_t pixelFormat;
     bool isBorderless;
 
-    g_pMemoryReader = &memReader;
+#ifdef WIN32
+    m_pMemoryReader = std::make_unique<CMemoryReaderWin32>();
+#else
+    m_pMemoryReader = std::make_unique<CMemoryReaderLinux>();
+#endif
+
     processID = m_ParamsManager.GetProcessID();
     imageWidth = m_ParamsManager.GetImageWidth();
     imageHeight = m_ParamsManager.GetImageHeight();
@@ -117,7 +116,7 @@ void CApplication::StartScan()
     UpdateWindowTitle();
 
     Utils::Log("Initializing memory reader");
-    if (!g_pMemoryReader->OpenRemoteProcess(processID))
+    if (!m_pMemoryReader->OpenRemoteProcess(processID))
         EXCEPT("memory reader initializing failed");
 
     Utils::Log("Initializing renderer");

@@ -2,8 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 
-IMemoryReader *g_pMemoryReader;
-
 CMemoryReaderLinux::~CMemoryReaderLinux()
 {
     CloseRemoteProcess();

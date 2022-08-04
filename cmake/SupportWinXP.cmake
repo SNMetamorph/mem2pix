@@ -21,7 +21,8 @@ macro (enable_winxp_support TARGET_NAME)
 				target_compile_options (${TARGET_NAME} PRIVATE /Zi)
 				target_compile_options (${TARGET_NAME} PRIVATE /FS)
 				target_compile_options (${TARGET_NAME} PRIVATE /Zc:threadSafeInit-)
-				
+				#target_link_options (${TARGET_NAME} PRIVATE /SUBSYSTEM:CONSOLE,5.01)
+
 				if (${CMAKE_MATCH_1} LESS 11)
 					# Nothing. Older VS does support XP by default.
 				elseif (${CMAKE_MATCH_1} EQUAL 11)
@@ -38,6 +39,10 @@ macro (enable_winxp_support TARGET_NAME)
 					set (CMAKE_VS_PLATFORM_TOOLSET "v140_xp" CACHE STRING "CMAKE_VS_PLATFORM_TOOLSET" FORCE)
 				elseif (${CMAKE_MATCH_1} EQUAL 15)
 					# Visual Studio 15 2017
+					set (CMAKE_GENERATOR_TOOLSET "v141_xp" CACHE STRING "CMAKE_GENERATOR_TOOLSET" FORCE)
+					set (CMAKE_VS_PLATFORM_TOOLSET "v141_xp" CACHE STRING "CMAKE_VS_PLATFORM_TOOLSET" FORCE)
+				elseif (${CMAKE_MATCH_1} EQUAL 16)
+					# Visual Studio 16 2019
 					set (CMAKE_GENERATOR_TOOLSET "v141_xp" CACHE STRING "CMAKE_GENERATOR_TOOLSET" FORCE)
 					set (CMAKE_VS_PLATFORM_TOOLSET "v141_xp" CACHE STRING "CMAKE_VS_PLATFORM_TOOLSET" FORCE)
 				else ()

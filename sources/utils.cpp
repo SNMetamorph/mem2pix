@@ -1,5 +1,6 @@
 #include "utils.h"
 #include <iostream>
+#include <stdarg.h>
 
 bool Utils::IsDigitString(std::string &str)
 {
@@ -19,4 +20,15 @@ void Utils::ReportError(const char *errorMessage)
 void Utils::Log(const char *message)
 {
     std::cout << message << std::endl;
+}
+
+void Utils::Snprintf(std::string &result, const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    int stringSize = std::vsnprintf(nullptr, 0, format, args);
+    result.assign(stringSize + 2, '\0');
+    std::vsnprintf(result.data(), stringSize + 1, format, args);
+    result.assign(result.data());
+    va_end(args);
 }

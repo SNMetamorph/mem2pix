@@ -24,7 +24,7 @@ CRenderer::CRenderer()
     m_iRefreshRate      = 60;
     m_isFollowCursor    = false;
     m_isLegacyDragMethod = false;
-    strcpy(m_szWindowTitle, "mem2pix");
+    m_szWindowTitle     = "mem2pix";
 }
 
 CRenderer::~CRenderer()
@@ -62,12 +62,12 @@ void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
         windowFlags |= SDL_WINDOW_BORDERLESS;
 
     m_pWindow = SDL_CreateWindow(
-        m_szWindowTitle,        // window title
-        SDL_WINDOWPOS_CENTERED, // x position
-        SDL_WINDOWPOS_CENTERED, // y position
-        width,                  // window width
-        height,                 // window height
-        windowFlags             // flags
+        m_szWindowTitle.c_str(),    // window title
+        SDL_WINDOWPOS_CENTERED,     // x position
+        SDL_WINDOWPOS_CENTERED,     // y position
+        width,                      // window width
+        height,                     // window height
+        windowFlags                 // flags
     );
     if (!m_pWindow)
         EXCEPT("failed to create window");
@@ -109,11 +109,12 @@ void CRenderer::Init(uint32_t width, uint32_t height, pixformat_t pixFormat, boo
     m_iRefreshRate  = displayMode.refresh_rate;
 }
 
-void CRenderer::UpdateWindowTitle(const char *title)
+void CRenderer::UpdateWindowTitle(const std::string &title)
 {
-    strncpy(m_szWindowTitle, title, sizeof(m_szWindowTitle));
-    if (m_pWindow)
-        SDL_SetWindowTitle(m_pWindow, m_szWindowTitle);
+    m_szWindowTitle.assign(title);
+    if (m_pWindow) {
+        SDL_SetWindowTitle(m_pWindow, m_szWindowTitle.c_str());
+    }
 }
 
 bool CRenderer::HandleEvents()

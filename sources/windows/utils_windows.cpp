@@ -6,7 +6,7 @@
 #include <Psapi.h>
 
 
-int32_t Utils::FindProcessID(std::string &processName, size_t &processCount)
+int32_t Utils::FindProcessID(const std::string &processName, size_t &processCount)
 {
     int32_t processID;
     HANDLE processSnapshot;
@@ -39,42 +39,32 @@ int32_t Utils::FindProcessID(std::string &processName, size_t &processCount)
     return processID;
 }
 
-bool Utils::GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
+bool Utils::GetProcessName(int32_t processID, std::string &processName)
 {
-    char *slashPos;
-    char *processName;
-    char stringBuffer[256];
-    const size_t bufferLen = sizeof(stringBuffer);
+    processName.clear();
+    processName.assign(256, '\0');
+
     HANDLE processHandle = OpenProcess(
         PROCESS_QUERY_INFORMATION, false, processID
     );
 
     if (processHandle)
     {
-        stringBuffer[0] = '\0';
         GetProcessImageFileName(
-            processHandle, stringBuffer, bufferLen
+            processHandle, processName.data(), processName.length() - 1
         );
         CloseHandle(processHandle);
-    }
-    else
-    {
-        nameBuffer[0] = '\0';
-        return false;
-    }
-
-    slashPos = strrchr(stringBuffer, '\\');
-    if (slashPos)
-        processName = slashPos + 1;
-    else
-        processName = stringBuffer;
-
-    if (strlen(stringBuffer) > 0)
-    {
-        strncpy(nameBuffer, processName, bufferSize);
-        return true;
+        processName.assign(processName.c_str());
+        if (processName.length() > 0)
+        {
+            // remove path to file in string
+            processName.erase(0, processName.find_last_of("/\\") + 1);
+            processName.shrink_to_fit();
+            return true;
+        }
     }
 
+    processName.clear();
     return false;
 }
 

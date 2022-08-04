@@ -14,8 +14,8 @@ void CApplication::UpdateWindowTitle()
     int32_t processID;
     uint32_t imageWidth;
     uint32_t imageHeight;
-    char processName[256];
-    char titleString[256];
+    std::string processName;
+    std::string titleString;
     const char *pixelFormatAlias;
 
     processID = m_ParamsManager.GetProcessID();
@@ -27,11 +27,11 @@ void CApplication::UpdateWindowTitle()
     pixelFormatAlias = m_ParamsManager.GetPixelFormatAlias(
         m_ParamsManager.GetPixelFormat()
     );
-    Utils::GetProcessName(processID, processName, sizeof(processName));
+    Utils::GetProcessName(processID, processName);
 
-    snprintf(
-        titleString, sizeof(titleString), "%s | 0x%X | %dx%d (%s)",
-        processName, dataOffset, imageWidth, imageHeight, pixelFormatAlias
+    Utils::Snprintf(
+        titleString, "%s | 0x%X | %dx%d (%s)",
+        processName.c_str(), dataOffset, imageWidth, imageHeight, pixelFormatAlias
     );
     m_Renderer.UpdateWindowTitle(titleString);
 }

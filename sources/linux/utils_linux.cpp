@@ -1,55 +1,43 @@
 #include "utils.h"
 #include <cctype>
+#include <string>
 
 // Linux API headers
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
 
-
-int32_t Utils::FindProcessID(std::string& processName, size_t &processCount)
+int32_t Utils::FindProcessID(const std::string& processName, size_t &processCount)
 {
     // just a stub
     return -1;
 }
 
-bool Utils::GetProcessName(int32_t processID, char *nameBuffer, size_t bufferSize)
+bool Utils::GetProcessName(int32_t processID, std::string &processName)
 {
     FILE *fileHandle;
-    char *lastSlash;
-    char *processName;
-    char stringBuffer[256];
-    const size_t bufferLen = sizeof(stringBuffer);
+    std::string sysFilePath;
 
-    snprintf(
-        stringBuffer, bufferLen, 
-        "/proc/%d/cmdline", processID
-    );
-    fileHandle = fopen(stringBuffer, "rb");
-    if (!fileHandle)
+    processName.clear();
+    processName.assign(256, '\0');
+    Utils::Snprintf(sysFilePath, "/proc/%d/cmdline", processID);
+
+    fileHandle = fopen(sysFilePath.c_str(), "rb");
+    if (fileHandle)
     {
-        nameBuffer[0] = '\0';
-        return false;
-    }
-
-    fread(stringBuffer, bufferLen, 1, fileHandle);
-    stringBuffer[bufferLen - 1] = '\0';
-    lastSlash = strrchr(stringBuffer, '/');
-
-    if (lastSlash)
-        processName = lastSlash + 1;
-    else 
-        processName = stringBuffer;
-
-    if (strlen(stringBuffer) > 0)
-    {
-        strncpy(nameBuffer, processName, bufferSize);
+        fread(processName.data(), processName.length() - 1, 1, fileHandle);
         fclose(fileHandle);
-        return true;
+        processName.assign(processName.c_str());
+        if (processName.length() > 0)
+        {
+            // remove path to file in string
+            processName.erase(0, processName.find_last_of("/\\") + 1);
+            processName.shrink_to_fit();
+            return true;
+        }
     }
 
-    nameBuffer[0] = '\0';
-    fclose(fileHandle);
+    processName.clear();
     return false;
 }
 

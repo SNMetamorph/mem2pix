@@ -18,10 +18,6 @@ GNU General Public License for more details.
 #undef main
 int main(int argc, char *argv[])
 {
-#ifdef WIN32
-    // just some colors :)
-    system("color 0A");
-#endif
     CApplication application;
     return application.Initialize(argc, argv);
 }

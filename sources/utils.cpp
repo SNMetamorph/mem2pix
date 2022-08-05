@@ -13,6 +13,7 @@ GNU General Public License for more details.
 */
 
 #include "utils.h"
+#include "console.h"
 #include <iostream>
 #include <stdarg.h>
 
@@ -20,7 +21,7 @@ bool Utils::IsDigitString(std::string &str)
 {
     for (char &symbol : str)
     {
-        if (!isdigit(symbol))
+        if (!std::isdigit(symbol))
             return false;
     }
     return true;
@@ -28,12 +29,9 @@ bool Utils::IsDigitString(std::string &str)
 
 void Utils::ReportError(const char *errorMessage)
 {
-    std::cout << "ERROR: " << errorMessage << std::endl;
-}
-
-void Utils::Log(const char *message)
-{
-    std::cout << message << std::endl;
+    namespace con = Console;
+    namespace color = Console::TextColor;
+    std::cout << color::Red << "Error: " << con::ResetTextColor << errorMessage << std::endl;
 }
 
 void Utils::Snprintf(std::string &result, const char *format, ...)

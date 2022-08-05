@@ -124,9 +124,9 @@ void CParamsManager::CheckParams()
 {
     if (m_iProcessID < 0)
         EXCEPT("invalid process name/ID, check for valid");
-    else if (m_iImageWidth == 0)
+    else if (m_iImageWidth < 1)
         EXCEPT("invalid image width");
-    else if (m_iImageHeight == 0)
+    else if (m_iImageHeight < 1)
         EXCEPT("invalid image height");
     else if (m_PixelFormat == PixelFormat::Invalid)
         EXCEPT("invalid pixel format, must match one from list");
@@ -149,9 +149,9 @@ void CParamsManager::SetupFormatAliasList(char *stringBuffer, size_t bufferSize)
     size_t printedValues = 0;
     const size_t valuesInRow = 6;
 
-    snprintf(linePrefix, sizeof(linePrefix), "%12c", ' ');
+    std::snprintf(linePrefix, sizeof(linePrefix), "%12c", ' ');
     memset(lineBuffer, 0, sizeof(lineBuffer));
-    strncat(stringBuffer, linePrefix, bufferSize);
+    std::strncat(stringBuffer, linePrefix, bufferSize);
 
     for (const PixelFormatEntry &entry : m_FormatList)
     {
@@ -159,11 +159,11 @@ void CParamsManager::SetupFormatAliasList(char *stringBuffer, size_t bufferSize)
 
         if (printedValues % valuesInRow == (valuesInRow - 1))
         {
-            strncat(lineBuffer, "\n", sizeof(lineBuffer));
-            strncat(lineBuffer, linePrefix, sizeof(lineBuffer));
+            std::strncat(lineBuffer, "\n", sizeof(lineBuffer));
+            std::strncat(lineBuffer, linePrefix, sizeof(lineBuffer));
         }
 
-        strncat(stringBuffer, lineBuffer, bufferSize);
+        std::strncat(stringBuffer, lineBuffer, bufferSize);
         ++printedValues;
     }
 }

@@ -17,6 +17,7 @@ GNU General Public License for more details.
 #include "utils.h"
 #include <stdint.h>
 #include <string.h>
+#include <iostream>
 
 static SDL_HitTestResult HitTestCallback(
     SDL_Window *window, const SDL_Point *area, void *data)
@@ -109,7 +110,7 @@ void CRenderer::Init(uint32_t width, uint32_t height, PixelFormat pixFormat, boo
         m_isLegacyDragMethod = true;
         if (windowFlags & SDL_WINDOW_BORDERLESS)
         {
-            Utils::Log(
+            std::cout << (
                 "SetWindowHitTest() failed, will be used "
                 "legacy window dragging method"
             );

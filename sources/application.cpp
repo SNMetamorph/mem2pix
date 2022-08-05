@@ -18,8 +18,10 @@ GNU General Public License for more details.
 #include "exception.h"
 #include "params_manager.h"
 #include "project_info.h"
+#include "console.h"
 #include <string>
 #include <stdio.h>
+#include <iostream>
 
 void CApplication::UpdateWindowTitle()
 {
@@ -85,13 +87,11 @@ int CApplication::Initialize(int argc, char *argv[])
         return 0;
     }
 
-    std::printf(
-        "\n"
-        " * \n"
-        " * mem2pix started\n"
-        " * \n"
-        "\n"
-    );
+    std::cout << std::endl;
+    std::cout << " * " << std::endl;
+    std::cout << " * " << Console::TextColor::Lime << "mem2pix" << Console::ResetTextColor << " started" << std::endl;
+    std::cout << " * " << std::endl;
+    std::cout << std::endl;
 
     try
     {
@@ -129,22 +129,22 @@ void CApplication::StartScan()
     isBorderless = m_ParamsManager.IsBorderlessMode();
     UpdateWindowTitle();
 
-    Utils::Log("Initializing memory reader");
+    std::cout << "Initializing memory reader" << std::endl;
     if (!m_pMemoryReader->OpenRemoteProcess(processID))
         EXCEPT("memory reader initializing failed");
 
-    Utils::Log("Initializing renderer");
+    std::cout << "Initializing renderer" << std::endl;
     m_Renderer.Init(imageWidth, imageHeight, pixelFormat, isBorderless);
     
-    Utils::Log(
-        "Visualizing started\n"
-        "\n"
-        "Usage tips:\n"
-        "  Hold LMB to drag window\n"
-        "  Press RMB to close window\n"
-        "\n"
-    );
+    std::cout << "Visualizing started" << std::endl;
+    std::cout << std::endl;
+    std::cout << "Usage tips:" << std::endl;
+    std::cout << "  Hold LMB to drag window" << std::endl;
+    std::cout << "  Press RMB to close window" << std::endl;
+    std::cout << std::endl;
+
     while (ProgramLoop());
+    std::cout << "Scanning stopped, exiting..." << std::endl;
 }
 
 void CApplication::ParseParams(int argc, char *argv[])
@@ -160,45 +160,47 @@ void CApplication::ParseParams(int argc, char *argv[])
 
 void CApplication::ReportParams()
 {
+    namespace con = Console;
+    namespace tc = Console::TextColor;
+    size_t imageWidth = m_ParamsManager.GetImageWidth();
+    size_t imageHeight = m_ParamsManager.GetImageHeight();
+    PixelFormat pixFormat = m_ParamsManager.GetPixelFormat();
     size_t dataOffset = reinterpret_cast<size_t>(
         m_ParamsManager.GetDataAddress()
     );
-
-    std::printf(
-        "Parameters:\n"
-        "  Process ID     : %d\n"
-        "  Data offset    : 0x%zX\n"
-        "  Image size     : %dx%d\n"
-        "  Pixel format   : %s\n"
-        "\n",
-        m_ParamsManager.GetProcessID(), dataOffset,
-        m_ParamsManager.GetImageWidth(), m_ParamsManager.GetImageHeight(),
-        m_ParamsManager.GetPixelFormatAlias(m_ParamsManager.GetPixelFormat())
-    );
+    
+    std::cout << "Parameters:" << std::endl;
+    std::cout << "  Process ID     : " << tc::Aqua << m_ParamsManager.GetProcessID() << std::endl << con::ResetTextColor;
+    std::cout << "  Data offset    : " << tc::Aqua << "0x" << std::uppercase << std::hex << dataOffset << std::endl << std::dec << con::ResetTextColor;
+    std::cout << "  Image size     : " << tc::Aqua << imageWidth << "x" << imageHeight << std::endl << con::ResetTextColor;
+    std::cout << "  Pixel format   : " << tc::Aqua << m_ParamsManager.GetPixelFormatAlias(pixFormat) << std::endl << con::ResetTextColor;
+    std::cout << std::endl;
 }
 
 void CApplication::ShowTitleText()
 {
+    namespace con = Console;
+    namespace tc = Console::TextColor;
     static char aliasList[2048];
     aliasList[0] = '\0';
-    m_ParamsManager.SetupFormatAliasList(
-        aliasList, sizeof(aliasList)
-    );
-    printf(
-        "\n"
-        "  mem2pix - utility for visualizing process memory content as image\n"
-        "  Version :  %s\n"
-        "  Usage   :  mem2pix <required params> [optional params]\n"
-        "\n"
-        "  Required parameters:\n"
-        "     -p   : Target process ID or name (desirable to use ID)\n"
-        "     -o   : Content address in target process (DEC or HEX value)\n"
-        "     -w   : Image representation width\n"
-        "     -h   : Image representation height\n"
-        "     -f   : Image pixel format, must match one of list below:\n"
-        "%s\n"
-        "  Optional parameters:\n"
-        "     -b   : Force borderless window mode"
-        "\n", APP_VERSION_STRING, aliasList
-    );
+    m_ParamsManager.SetupFormatAliasList(aliasList, sizeof(aliasList));
+
+    std::cout << std::endl;
+    std::cout << tc::Lime << "  mem2pix" << con::ResetTextColor << " - utility for visualizing process memory content as image" << std::endl;
+    std::cout << "  Version :  " << APP_VERSION_STRING << " (" << APP_BUILD_DATE << ")" << std::endl;
+    std::cout << "  Usage   :  " << "mem2pix <required params> [optional params]" << std::endl;
+    std::cout << std::endl;
+    std::cout << "  Required parameters:" << std::endl;
+    std::cout << tc::Red << "     -p" << con::ResetTextColor << "   : Target process ID or name (desirable to use ID)" << std::endl;
+    std::cout << tc::Red << "     -o" << con::ResetTextColor << "   : Content address in target process (DEC or HEX value)" << std::endl;
+    std::cout << tc::Red << "     -w" << con::ResetTextColor << "   : Image representation width" << std::endl;
+    std::cout << tc::Red << "     -h" << con::ResetTextColor << "   : Image representation height" << std::endl;
+    std::cout << tc::Red << "     -f" << con::ResetTextColor << "   : Image pixel format, must match one of list below:" << std::endl;
+
+    con::SetTextColor(Console::Color::Olive);
+    std::cout << aliasList << std::endl;
+    con::ResetColors(true, false);
+
+    std::cout << "  Optional parameters:" << std::endl;
+    std::cout << tc::Red << "     -b" << con::ResetTextColor << "   : Force borderless window mode" << std::endl;
 }

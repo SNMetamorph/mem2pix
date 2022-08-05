@@ -24,5 +24,4 @@ namespace Utils
 	bool IsValidProcessID(int32_t processID);
 	void Snprintf(std::string &result, const char *format, ...);
 	void ReportError(const char *errorMessage);
-	void Log(const char *message);
 };

@@ -63,6 +63,10 @@ set(SDL_THREADS OFF CACHE BOOL "")
 set(SDL_ATOMIC OFF CACHE BOOL "")
 set(SDL_CPUINFO OFF CACHE BOOL "")
 
+# dynamic linking for SDL2 library
+set(SDL_STATIC OFF CACHE BOOL "")
+set(SDL_SHARED ON CACHE BOOL "")
+
 if(WIN32)
 	# disable DirectX in SDL2 (for Windows XP compatibility)
 	set(DIRECTX OFF CACHE BOOL "")

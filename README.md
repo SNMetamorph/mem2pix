@@ -1,14 +1,21 @@
 # mem2pix
-Program for visualizing arbitrary part of remote process memory in real-time.<br> May be useful for working with things like
+![GitHub release (by tag)](https://img.shields.io/github/downloads/SNMetamorph/mem2pix/total)
+![GitHub top language](https://img.shields.io/github/languages/top/SNMetamorph/mem2pix)
+![GitHub repo size](https://img.shields.io/github/repo-size/SNMetamorph/mem2pix)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/SNMetamorph/mem2pix)
+![Lines of code](https://img.shields.io/tokei/lines/github/SNMetamorph/mem2pix)
+![GitHub Release Date](https://img.shields.io/github/release-date/SNMetamorph/mem2pix)
+
+Program for visualizing arbitrary part of remote process memory in real-time.  
+May be useful for working with things like
 framebuffers/textures and tracking how these stuff content changes over the time.
-* Supports many pixel format
+* Supports many pixel formats
 * Works on both Linux and Windows (including XP)
 * Based on SDL2 library
 ## Images
-![Title Text](https://i.imgur.com/L3mZPy0.png)
+![Title Text](https://i.imgur.com/RAV52cz.png)
 ![Picture 1](https://i.imgur.com/6tLsdDd.png)
 ![Picture 2](https://i.imgur.com/t6Yd5qm.png)
-![Picture 3](https://i.imgur.com/2k2ou6K.png)
 
 # Building 
 ## Windows
@@ -31,7 +38,7 @@ cd build
 cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
 make
 ```
-Result executable file will be located in /build/bin/*BUILD_TYPE* directory.
+Result executable file will be located in /build/*BUILD_TYPE*/bin directory.
 
-# About
-This project uses [SDL2](https://www.libsdl.org/index.php) library, which has [zlib](https://www.libsdl.org/license.php) license.
+# External depedencies
+[SDL2](https://www.libsdl.org/index.php) - Copyright (c) Sam Lantinga - [zlib](https://www.libsdl.org/license.php) license
